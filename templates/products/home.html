@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - ShopNow{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold">Welcome to ShopNow</h1>
+                <p class="lead">Discover amazing products at great prices. Shop with confidence and enjoy fast delivery.</p>
+                <a href="#featured-products" class="btn btn-light btn-lg">Shop Now</a>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://via.placeholder.com/600x400" alt="Hero Image" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories -->
+<section class="categories-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Shop by Category</h2>
+        <div class="row">
+            {% for category in categories|slice:":6" %}
+            <div class="col-md-4 mb-4">
+                <div class="card category-card h-100">
+                    {% if category.image %}
+                    <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="{{ category.name }}">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <a href="{{ category.get_absolute_url }}" class="btn btn-primary">Browse Products</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section id="featured-products" class="featured-products py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Products</h2>
+        <div class="row">
+            {% for product in featured_products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                {% include 'products/includes/product_card.html' %}
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No featured products available.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Latest Products -->
+<section class="latest-products py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Latest Products</h2>
+        <div class="row">
+            {% for product in latest_products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                {% include 'products/includes/product_card.html' %}
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No products available.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

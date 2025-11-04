@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     #custom apps
     'products',
@@ -130,6 +131,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
@@ -144,3 +146,12 @@ CART_SESSION_ID = 'cart'
 
 # Email settings (configure based on your email service)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Admin site configuration
+ADMIN_SITE_HEADER = "ShopNow Administration"
+ADMIN_SITE_TITLE = "ShopNow Admin"
+ADMIN_INDEX_TITLE = "Dashboard"
+
+# Custom admin URL (for security)
+ADMIN_URL = 'admin/'

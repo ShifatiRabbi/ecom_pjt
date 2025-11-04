@@ -1,0 +1,95 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --primary: #4361ee;
+        --secondary: #3f37c9;
+        --success: #4cc9f0;
+        --info: #4895ef;
+        --warning: #f72585;
+        --danger: #e63946;
+        --light: #f8f9fa;
+        --dark: #212529;
+    }
+    
+    #header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+    }
+    
+    #branding h1 {
+        color: white;
+        font-weight: 600;
+    }
+    
+    .module h2, .module caption, .inline-group h2 {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+    
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+        background: var(--secondary);
+        color: white;
+    }
+    
+    .dashboard .module table th {
+        width: 100%;
+        background: var(--primary);
+        color: white;
+    }
+    
+    .dashboard .module table td {
+        white-space: nowrap;
+        padding: 8px;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .badge-success { background: var(--success); color: white; }
+    .badge-warning { background: var(--warning); color: white; }
+    .badge-danger { background: var(--danger); color: white; }
+    .badge-info { background: var(--info); color: white; }
+    .badge-primary { background: var(--primary); color: white; }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'custom_admin:index' %}">
+        <i class="fas fa-crown"></i> {{ site_header|default:_('Django administration') }}
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}
+<div style="float: right; margin-right: 20px;">
+    <a href="{% url 'custom_admin:dashboard' %}" class="button" style="background: rgba(255,255,255,0.2);">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+    <a href="/" target="_blank" class="button" style="background: rgba(255,255,255,0.2);">
+        <i class="fas fa-store"></i> View Site
+    </a>
+</div>
+{% endblock %}

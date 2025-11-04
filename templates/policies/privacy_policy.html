@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy - ShopNow{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'products:home' %}">Home</a></li>
+                    <li class="breadcrumb-item active">Privacy Policy</li>
+                </ol>
+            </nav>
+
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4">Privacy Policy</h1>
+                <p class="lead">Last updated: {% now "F j, Y" %}</p>
+            </div>
+
+            <!-- Content -->
+            <div class="card">
+                <div class="card-body p-5">
+                    <div class="policy-content">
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">1. Information We Collect</h2>
+                            <p>We collect information you provide directly to us when you:</p>
+                            <ul>
+                                <li>Create an account or update your profile</li>
+                                <li>Place an order or make a purchase</li>
+                                <li>Contact our customer service team</li>
+                                <li>Subscribe to our newsletter</li>
+                                <li>Participate in surveys or promotions</li>
+                            </ul>
+                            <p><strong>Personal Information:</strong> Name, email address, phone number, shipping address, payment information.</p>
+                            <p><strong>Technical Information:</strong> IP address, browser type, device information, cookies.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">2. How We Use Your Information</h2>
+                            <p>We use the information we collect to:</p>
+                            <ul>
+                                <li>Process and fulfill your orders</li>
+                                <li>Provide customer support and respond to inquiries</li>
+                                <li>Send order confirmations and shipping updates</li>
+                                <li>Personalize your shopping experience</li>
+                                <li>Send marketing communications (with your consent)</li>
+                                <li>Improve our website and services</li>
+                                <li>Prevent fraud and ensure security</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">3. Information Sharing</h2>
+                            <p>We do not sell your personal information to third parties. We may share your information with:</p>
+                            <ul>
+                                <li><strong>Service Providers:</strong> Payment processors, shipping carriers, marketing platforms</li>
+                                <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
+                                <li><strong>Business Transfers:</strong> In connection with a merger or acquisition</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">4. Data Security</h2>
+                            <p>We implement appropriate security measures to protect your personal information:</p>
+                            <ul>
+                                <li>SSL encryption for data transmission</li>
+                                <li>Secure payment processing</li>
+                                <li>Regular security assessments</li>
+                                <li>Limited access to personal data</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">5. Your Rights</h2>
+                            <p>You have the right to:</p>
+                            <ul>
+                                <li>Access and review your personal information</li>
+                                <li>Correct inaccurate data</li>
+                                <li>Request deletion of your data</li>
+                                <li>Opt-out of marketing communications</li>
+                                <li>Withdraw consent at any time</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">6. Cookies and Tracking</h2>
+                            <p>We use cookies and similar technologies to:</p>
+                            <ul>
+                                <li>Remember your preferences</li>
+                                <li>Analyze website traffic</li>
+                                <li>Personalize content</li>
+                                <li>Enable shopping cart functionality</li>
+                            </ul>
+                            <p>You can control cookies through your browser settings.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">7. Contact Us</h2>
+                            <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                            <ul>
+                                <li>Email: privacy@shopnow.com</li>
+                                <li>Phone: +1 234 567 8900</li>
+                                <li>Address: 123 Commerce Street, Business City, BC 12345</li>
+                            </ul>
+                        </section>
+
+                        <div class="alert alert-info mt-4">
+                            <strong>Note:</strong> This privacy policy may be updated from time to time. 
+                            We will notify you of any material changes by posting the new policy on this page.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

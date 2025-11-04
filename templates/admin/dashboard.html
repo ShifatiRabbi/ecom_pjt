@@ -1,0 +1,396 @@
+{% extends "admin/base_site.html" %}
+{% load humanize %}
+
+{% block title %}Dashboard - {{ site_title }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .dashboard-container {
+        padding: 20px;
+        background: #f8f9fa;
+        min-height: calc(100vh - 60px);
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--primary);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-card.orders { border-left-color: #4361ee; }
+    .stat-card.revenue { border-left-color: #4cc9f0; }
+    .stat-card.products { border-left-color: #f72585; }
+    .stat-card.customers { border-left-color: #3a0ca3; }
+    
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        opacity: 0.8;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .dashboard-section {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: var(--dark);
+        border-bottom: 2px solid var(--light);
+        padding-bottom: 10px;
+    }
+    
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .action-btn {
+        background: white;
+        border: 2px solid var(--light);
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        color: var(--dark);
+        transition: all 0.3s ease;
+    }
+    
+    .action-btn:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: var(--primary);
+    }
+    
+    .action-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .table th {
+        background: var(--light);
+        font-weight: 600;
+        color: var(--dark);
+    }
+    
+    .chart-container {
+        height: 300px;
+        margin-top: 20px;
+    }
+    
+    .progress-bar {
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 8px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 10px;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="{% url 'custom_admin:products_product_add' %}" class="action-btn">
+            <i class="fas fa-plus-circle action-icon text-primary"></i>
+            <strong>Add Product</strong>
+        </a>
+        <a href="{% url 'custom_admin:products_category_add' %}" class="action-btn">
+            <i class="fas fa-folder-plus action-icon text-success"></i>
+            <strong>Add Category</strong>
+        </a>
+        <a href="{% url 'custom_admin:orders_order_changelist' %}" class="action-btn">
+            <i class="fas fa-shopping-cart action-icon text-warning"></i>
+            <strong>View Orders</strong>
+        </a>
+        <a href="{% url 'custom_admin:orders_incompleteorder_changelist' %}" class="action-btn">
+            <i class="fas fa-clock action-icon text-info"></i>
+            <strong>Incomplete Orders</strong>
+        </a>
+    </div>
+
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+        <div class="stat-card orders">
+            <i class="fas fa-shopping-bag stat-icon text-primary"></i>
+            <div class="stat-value">{{ total_orders|intcomma }}</div>
+            <div class="stat-label">Total Orders</div>
+            <small class="text-muted">{{ recent_orders }} new this week</small>
+        </div>
+        
+        <div class="stat-card revenue">
+            <i class="fas fa-dollar-sign stat-icon text-success"></i>
+            <div class="stat-value">${{ total_revenue|floatformat:2|intcomma }}</div>
+            <div class="stat-label">Total Revenue</div>
+            <small class="text-muted">${{ monthly_revenue|floatformat:2 }} this month</small>
+        </div>
+        
+        <div class="stat-card products">
+            <i class="fas fa-cube stat-icon text-danger"></i>
+            <div class="stat-value">{{ total_products|intcomma }}</div>
+            <div class="stat-label">Total Products</div>
+            <small class="text-muted">
+                {{ active_products }} active, 
+                <span class="text-warning">{{ low_stock_products }} low stock</span>
+            </small>
+        </div>
+        
+        <div class="stat-card customers">
+            <i class="fas fa-users stat-icon text-info"></i>
+            <div class="stat-value">{{ incomplete_orders|intcomma }}</div>
+            <div class="stat-label">Incomplete Orders</div>
+            <small class="text-muted">Need follow-up</small>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Orders -->
+        <div class="col-md-8">
+            <div class="dashboard-section">
+                <h3 class="section-title">
+                    <i class="fas fa-clock me-2"></i>Recent Orders
+                    <a href="{% url 'custom_admin:orders_order_changelist' %}" class="float-end btn btn-sm btn-primary">
+                        View All
+                    </a>
+                </h3>
+                
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders_list %}
+                            <tr>
+                                <td>
+                                    <strong>{{ order.order_number }}</strong>
+                                </td>
+                                <td>
+                                    <div>{{ order.customer_name }}</div>
+                                    <small class="text-muted">{{ order.customer_email }}</small>
+                                </td>
+                                <td>${{ order.total_amount }}</td>
+                                <td>
+                                    {% if order.order_status == 'pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% elif order.order_status == 'processing' %}
+                                    <span class="badge badge-info">Processing</span>
+                                    {% elif order.order_status == 'shipped' %}
+                                    <span class="badge badge-primary">Shipped</span>
+                                    {% elif order.order_status == 'delivered' %}
+                                    <span class="badge badge-success">Delivered</span>
+                                    {% else %}
+                                    <span class="badge badge-danger">{{ order.get_order_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ order.created_at|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                                    No orders yet
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Products & Stock Status -->
+        <div class="col-md-4">
+            <!-- Top Products -->
+            <div class="dashboard-section">
+                <h3 class="section-title">
+                    <i class="fas fa-chart-line me-2"></i>Top Products
+                </h3>
+                
+                <div class="list-group">
+                    {% for product in top_products %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ product.name|truncatewords:3 }}</strong>
+                            <br>
+                            <small class="text-muted">Sold: {{ product.total_sold|default:0 }}</small>
+                        </div>
+                        <span class="badge badge-primary">${{ product.price }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-chart-bar fa-2x mb-2"></i><br>
+                        No sales data
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Stock Status -->
+            <div class="dashboard-section">
+                <h3 class="section-title">
+                    <i class="fas fa-boxes me-2"></i>Stock Status
+                </h3>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>In Stock</span>
+                        <span>{{ active_products }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {% widthratio active_products total_products 100 %}%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-warning">Low Stock</span>
+                        <span>{{ low_stock_products }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill bg-warning" style="width: {% widthratio low_stock_products total_products 100 %}%"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-danger">Out of Stock</span>
+                        <span>{{ out_of_stock_products }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill bg-danger" style="width: {% widthratio out_of_stock_products total_products 100 %}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="dashboard-section">
+        <h3 class="section-title">
+            <i class="fas fa-chart-bar me-2"></i>Sales Overview (Last 7 Days)
+        </h3>
+        
+        <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesData = {{ sales_data|safe }};
+    
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: salesData.map(item => item.date),
+            datasets: [{
+                label: 'Daily Sales ($)',
+                data: salesData.map(item => item.sales),
+                backgroundColor: 'rgba(67, 97, 238, 0.6)',
+                borderColor: 'rgba(67, 97, 238, 1)',
+                borderWidth: 2,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Sales: $' + context.parsed.y;
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

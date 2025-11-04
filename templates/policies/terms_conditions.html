@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms & Conditions - ShopNow{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'products:home' %}">Home</a></li>
+                    <li class="breadcrumb-item active">Terms & Conditions</li>
+                </ol>
+            </nav>
+
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4">Terms & Conditions</h1>
+                <p class="lead">Last updated: {% now "F j, Y" %}</p>
+            </div>
+
+            <!-- Content -->
+            <div class="card">
+                <div class="card-body p-5">
+                    <div class="alert alert-warning">
+                        <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Please Read Carefully</h4>
+                        <p class="mb-0">By accessing and using ShopNow, you accept and agree to be bound by these Terms and Conditions.</p>
+                    </div>
+
+                    <div class="policy-content">
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">1. Agreement to Terms</h2>
+                            <p>By accessing or using our website, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you disagree with any part of these terms, you may not access our website.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">2. Use of the Website</h2>
+                            <p><strong>Eligibility:</strong> You must be at least 18 years old to use our website. By using our website, you represent that you are at least 18 years old.</p>
+                            <p><strong>Account Registration:</strong> You may need to register an account to access certain features. You are responsible for maintaining the confidentiality of your account information.</p>
+                            <p><strong>Prohibited Activities:</strong> You agree not to:</p>
+                            <ul>
+                                <li>Use the website for any illegal purpose</li>
+                                <li>Violate any laws in your jurisdiction</li>
+                                <li>Infringe upon our intellectual property rights</li>
+                                <li>Harass, abuse, or harm others</li>
+                                <li>Submit false or misleading information</li>
+                                <li>Upload viruses or malicious code</li>
+                                <li>Interfere with the website's security features</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">3. Products and Pricing</h2>
+                            <p><strong>Product Information:</strong> We strive to display accurate product information, but we do not guarantee that product descriptions, prices, or other content are error-free.</p>
+                            <p><strong>Pricing:</strong> All prices are in US Dollars. We reserve the right to change prices at any time without notice.</p>
+                            <p><strong>Availability:</strong> All products are subject to availability. We may limit quantities and discontinue products at any time.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">4. Orders and Payment</h2>
+                            <p><strong>Order Acceptance:</strong> Your order constitutes an offer to purchase. We reserve the right to refuse or cancel any order for any reason.</p>
+                            <p><strong>Payment:</strong> We accept various payment methods as indicated during checkout. You represent that you have the legal right to use any payment method provided.</p>
+                            <p><strong>Order Changes:</strong> Order changes or cancellations must be requested within 1 hour of placing the order.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">5. Shipping and Delivery</h2>
+                            <p><strong>Shipping Methods:</strong> We offer various shipping options. Shipping times are estimates and not guaranteed.</p>
+                            <p><strong>Shipping Costs:</strong> Shipping costs are calculated during checkout and are the customer's responsibility.</p>
+                            <p><strong>Delivery:</strong> We are not responsible for delivery delays caused by third-party carriers or unforeseen circumstances.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">6. Returns and Refunds</h2>
+                            <p>Please refer to our <a href="{% url 'refund_policy' %}">Refund Policy</a> for detailed information about returns and refunds.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">7. Intellectual Property</h2>
+                            <p><strong>Ownership:</strong> All content on this website, including text, graphics, logos, and software, is our property or our licensors and is protected by copyright laws.</p>
+                            <p><strong>Limited License:</strong> We grant you a limited, non-exclusive, non-transferable license to access and use the website for personal use.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">8. User Content</h2>
+                            <p>By submitting content (reviews, comments, etc.), you grant us a worldwide, royalty-free license to use, modify, and display such content.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">9. Disclaimer of Warranties</h2>
+                            <p>THE WEBSITE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">10. Limitation of Liability</h2>
+                            <p>TO THE FULLEST EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">11. Indemnification</h2>
+                            <p>You agree to indemnify and hold us harmless from any claims arising from your use of the website or violation of these terms.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">12. Governing Law</h2>
+                            <p>These terms shall be governed by the laws of [Your State/Country], without regard to its conflict of law provisions.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">13. Changes to Terms</h2>
+                            <p>We reserve the right to modify these terms at any time. Continued use of the website constitutes acceptance of modified terms.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">14. Contact Information</h2>
+                            <p>For questions about these Terms and Conditions:</p>
+                            <ul>
+                                <li>Email: legal@shopnow.com</li>
+                                <li>Phone: +1 234 567 8900</li>
+                                <li>Address: 123 Commerce Street, Business City, BC 12345</li>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

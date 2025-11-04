@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Refund Policy - ShopNow{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'products:home' %}">Home</a></li>
+                    <li class="breadcrumb-item active">Refund Policy</li>
+                </ol>
+            </nav>
+
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4">Refund & Return Policy</h1>
+                <p class="lead">Last updated: {% now "F j, Y" %}</p>
+            </div>
+
+            <!-- Content -->
+            <div class="card">
+                <div class="card-body p-5">
+                    <div class="alert alert-success">
+                        <h4 class="alert-heading"><i class="fas fa-shield-alt"></i> 30-Day Money-Back Guarantee</h4>
+                        <p class="mb-0">We offer a 30-day money-back guarantee on all products. If you're not satisfied, we'll make it right.</p>
+                    </div>
+
+                    <div class="policy-content">
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">1. Return Eligibility</h2>
+                            <p>To be eligible for a return, your item must be:</p>
+                            <ul>
+                                <li>In the original packaging</li>
+                                <li>Unused and in the same condition you received it</li>
+                                <li>Accompanied by the original receipt or proof of purchase</li>
+                                <li>Returned within 30 days of delivery</li>
+                            </ul>
+                            <div class="alert alert-warning">
+                                <strong>Note:</strong> The following items cannot be returned:
+                                <ul class="mb-0 mt-2">
+                                    <li>Gift cards</li>
+                                    <li>Downloadable software products</li>
+                                    <li>Personal care items (for health and hygiene reasons)</li>
+                                    <li>Items on final sale or clearance</li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">2. Return Process</h2>
+                            <p>To initiate a return, please follow these steps:</p>
+                            <ol>
+                                <li>Contact our customer service team at returns@shopnow.com or call +1 234 567 8900</li>
+                                <li>Provide your order number and reason for return</li>
+                                <li>We will email you a return authorization and shipping label</li>
+                                <li>Package your item securely and attach the shipping label</li>
+                                <li>Drop off the package at any authorized shipping location</li>
+                            </ol>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">3. Refund Processing</h2>
+                            <p>Once we receive your return:</p>
+                            <ul>
+                                <li>We will inspect the returned item</li>
+                                <li>We will notify you of the approval or rejection of your refund</li>
+                                <li>If approved, your refund will be processed within 5-7 business days</li>
+                                <li>Refunds will be issued to the original payment method</li>
+                            </ul>
+                            <p><strong>Processing Times:</strong></p>
+                            <ul>
+                                <li>Credit/Debit Cards: 5-7 business days</li>
+                                <li>PayPal: 3-5 business days</li>
+                                <li>Bank Transfer: 7-10 business days</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">4. Shipping Costs</h2>
+                            <p><strong>Return Shipping:</strong> Customers are responsible for return shipping costs unless the return is due to our error or defective product.</p>
+                            <p><strong>Restocking Fee:</strong> A 15% restocking fee may apply for items returned without original packaging or showing signs of use.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">5. Exchanges</h2>
+                            <p>We only replace items if they are defective or damaged. If you need to exchange an item:</p>
+                            <ul>
+                                <li>Contact us within 30 days of delivery</li>
+                                <li>Provide photos of the defective/damaged item</li>
+                                <li>We will ship the replacement once we receive the returned item</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">6. Late or Missing Refunds</h2>
+                            <p>If you haven't received your refund:</p>
+                            <ul>
+                                <li>Check your bank account again</li>
+                                <li>Contact your credit card company (processing times vary)</li>
+                                <li>Contact your bank (refunds may take time to post)</li>
+                                <li>If still missing, contact us at refunds@shopnow.com</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">7. Sale Items</h2>
+                            <p>Only regular-priced items may be refunded. Sale items cannot be refunded unless defective.</p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h2 class="h4 mb-3">8. Contact Information</h2>
+                            <p>For questions about returns and refunds:</p>
+                            <ul>
+                                <li>Email: returns@shopnow.com</li>
+                                <li>Phone: +1 234 567 8900</li>
+                                <li>Hours: Monday-Friday, 9AM-6PM EST</li>
+                            </ul>
+                        </section>
+                    </div>
+
+                    <div class="card bg-light mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-exclamation-circle"></i> Important Notes</h5>
+                            <ul class="mb-0">
+                                <li>Return shipping costs are non-refundable</li>
+                                <li>We recommend using a trackable shipping service for returns</li>
+                                <li>We are not responsible for return items lost in transit</li>
+                                <li>Refund amounts may be adjusted for missing items or damage</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

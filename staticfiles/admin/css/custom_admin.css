@@ -1,0 +1,215 @@
+/* Custom Admin Styles */
+:root {
+    --primary: #4361ee;
+    --secondary: #3f37c9;
+    --success: #4cc9f0;
+    --info: #4895ef;
+    --warning: #f72585;
+    --danger: #e63946;
+    --light: #f8f9fa;
+    --dark: #212529;
+}
+
+/* Header Styling */
+#header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+    color: white !important;
+    border-bottom: none !important;
+}
+
+#branding h1 {
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+}
+
+#branding h1 a {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+#branding h1 a:hover {
+    opacity: 0.9;
+}
+
+/* Module Headers */
+.module h2, .module caption, .inline-group h2 {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 12px 16px !important;
+}
+
+/* Buttons */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: var(--primary) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover, 
+.submit-row input:hover, a.button:hover {
+    background: var(--secondary) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+    background: var(--success) !important;
+}
+
+.button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+    background: #3aa8d8 !important;
+}
+
+/* Badges */
+.badge {
+    display: inline-block !important;
+    padding: 6px 12px !important;
+    border-radius: 15px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.badge-success { background: var(--success) !important; color: white !important; }
+.badge-warning { background: var(--warning) !important; color: white !important; }
+.badge-danger { background: var(--danger) !important; color: white !important; }
+.badge-info { background: var(--info) !important; color: white !important; }
+.badge-primary { background: var(--primary) !important; color: white !important; }
+
+/* Tables */
+#changelist table thead th {
+    background: var(--light) !important;
+    color: var(--dark) !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid var(--primary) !important;
+}
+
+#changelist table tbody tr:hover {
+    background: rgba(67, 97, 238, 0.05) !important;
+}
+
+/* Form Styling */
+input[type=text], input[type=password], input[type=email], input[type=url],
+input[type=number], textarea, select, .vTextField {
+    border: 2px solid #e9ecef !important;
+    border-radius: 6px !important;
+    padding: 10px 12px !important;
+    transition: border-color 0.3s ease !important;
+}
+
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus,
+input[type=url]:focus, input[type=number]:focus, textarea:focus, select:focus,
+.vTextField:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1) !important;
+    outline: none !important;
+}
+
+/* Dashboard Specific */
+.dashboard .module table th {
+    width: 100% !important;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+.dashboard .module table td {
+    white-space: nowrap !important;
+    padding: 12px !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+/* Breadcrumb */
+.breadcrumbs {
+    background: var(--light) !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 12px 16px !important;
+    margin: 0 0 20px 0 !important;
+}
+
+/* Object Tools */
+.object-tools {
+    margin-top: 0 !important;
+}
+
+.object-tools a {
+    background: var(--success) !important;
+    border-radius: 6px !important;
+    padding: 10px 16px !important;
+}
+
+.object-tools a:hover {
+    background: #3aa8d8 !important;
+}
+
+/* Login Page */
+.login .form-row {
+    padding: 10px 0 !important;
+}
+
+.login .submit-row {
+    padding: 20px 0 0 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    #header {
+        padding: 10px !important;
+    }
+    
+    #branding h1 {
+        font-size: 1.2rem !important;
+    }
+    
+    .dashboard .module {
+        margin: 10px 0 !important;
+    }
+}
+
+/* Custom Utility Classes */
+.text-primary { color: var(--primary) !important; }
+.text-success { color: var(--success) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-danger { color: var(--danger) !important; }
+.text-info { color: var(--info) !important; }
+
+.bg-primary { background: var(--primary) !important; }
+.bg-success { background: var(--success) !important; }
+.bg-warning { background: var(--warning) !important; }
+.bg-danger { background: var(--danger) !important; }
+.bg-info { background: var(--info) !important; }
+
+/* Animation for loading */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Status indicators */
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-active { background: var(--success); }
+.status-inactive { background: var(--danger); }
+.status-pending { background: var(--warning); }

@@ -118,3 +118,19 @@ class IncompleteOrder(models.Model):
     
     def __str__(self):
         return f"Incomplete Order - {self.customer_phone}"
+    
+    def get_cart_summary(self):
+        """Get a summary of cart items for display"""
+        if self.cart_data and 'items' in self.cart_data:
+            items = self.cart_data['items']
+            return f"{len(items)} item(s) - ${self.cart_data.get('total_price', '0.00')}"
+        return "Empty cart"
+    
+    def get_items_list(self):
+        """Get list of items for admin display"""
+        if self.cart_data and 'items' in self.cart_data:
+            return [
+                f"{item.get('product_name', 'Unknown')} (Qty: {item.get('quantity', 0)})"
+                for item in self.cart_data['items']
+            ]
+        return []

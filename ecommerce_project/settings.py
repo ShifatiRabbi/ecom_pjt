@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from cryptography.fernet import Fernet
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -155,3 +156,9 @@ ADMIN_INDEX_TITLE = "Dashboard"
 
 # Custom admin URL (for security)
 ADMIN_URL = 'admin/'
+
+# Add to your settings.py
+ENCRYPTION_KEY = Fernet.generate_key()  # Store this securely in environment variables
+
+# For IP location detection
+IPINFO_TOKEN = '3589fc8827fbc0'  # Get free token from ipinfo.io

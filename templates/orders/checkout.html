@@ -1,40 +1,178 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Checkout - ShopNow{% endblock %}
+{% block title %}চেকআউট - ShopNow{% endblock %}
 
 {% block extra_css %}
 <style>
-    .checkout-section {
-        margin-bottom: 2rem;
+    .checkout-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
     }
-    .order-summary-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #e0e0e0;
+    .page-title {
+        text-align: center;
+        color: #f05a28;
+        font-weight: bold;
+        margin-bottom: 20px;
+        border-bottom: 2px dotted #f05a28;
+        padding-bottom: 15px;
     }
-    .order-summary-item:last-child {
-        border-bottom: none;
+    .checkout-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 20px;
     }
-    .payment-method {
-        border: 2px solid #e0e0e0;
-        border-radius: 5px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    .payment-method:hover {
-        border-color: #007bff;
-    }
-    .payment-method.selected {
-        border-color: #007bff;
-        background-color: #f8f9fa;
+    .section-title {
+        color: #f05a28;
+        font-weight: bold;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
     }
     .form-group {
-        margin-bottom: 1rem;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    .form-input {
+        width: 100%;
+        padding: 12px 40px 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: #f05a28;
+    }
+    .input-icon {
+        position: absolute;
+        right: 15px;
+        top: 40px;
+        color: #28a745;
+        font-size: 18px;
+    }
+    .radio-group {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+    .radio-option input {
+        margin: 0;
+    }
+    .product-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+    .product-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .product-details {
+        flex: 1;
+    }
+    .product-name {
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0;
+    }
+    .quantity-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .quantity-input {
+        width: 40px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+    }
+    .price-section {
+        margin: 20px 0;
+    }
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .total-row {
+        font-weight: bold;
+        font-size: 18px;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+    }
+    .coupon-section {
+        margin: 20px 0;
+    }
+    .coupon-input {
+        display: flex;
+        gap: 10px;
+    }
+    .coupon-input input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    .coupon-btn {
+        background: #f05a28;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .submit-btn {
+        width: 100%;
+        background: #f05a28;
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .remove-link {
+        color: #ff4444;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .old-price {
+        text-decoration: line-through;
+        color: #999;
+        margin-right: 10px;
+    }
+    .current-price {
+        color: #f05a28;
+        font-weight: bold;
     }
     .loading-overlay {
         display: none;
@@ -50,18 +188,23 @@
     }
     .progress-saved {
         background-color: #d4edda;
-        border-color: #c3e6cb;
+        border: 1px solid #c3e6cb;
         color: #155724;
-        padding: 0.75rem;
-        border-radius: 0.25rem;
-        margin-bottom: 1rem;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
         display: none;
+    }
+    @media (max-width: 768px) {
+        .checkout-columns {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="checkout-container">
     <!-- Loading Overlay -->
     <div class="loading-overlay">
         <div class="spinner-border text-light" role="status">
@@ -69,233 +212,153 @@
         </div>
     </div>
 
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'products:home' %}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'cart:cart_detail' %}">Cart</a></li>
-            <li class="breadcrumb-item active">Checkout</li>
-        </ol>
-    </nav>
-
-    <h1 class="mb-4">Checkout</h1>
+    <h1 class="page-title">অর্ডার টি সম্পন্ন করতে আপনার নাম, মোবাইল নাম্বার ও ঠিকানা নিচে লিখুন</h1>
 
     {% if cart.get_total_quantity == 0 %}
     <div class="alert alert-warning">
-        Your cart is empty. <a href="{% url 'products:home' %}">Continue shopping</a>.
+        আপনার কার্ট খালি। <a href="{% url 'products:home' %}">শপিং চালিয়ে যান</a>।
     </div>
     {% else %}
     <!-- Progress Saved Message -->
     <div class="progress-saved" id="progress-saved">
-        <i class="fas fa-check-circle"></i> Your progress has been saved! You can continue later.
+        <i class="fas fa-check-circle"></i> আপনার প্রগেস সেভ হয়েছে! আপনি পরে চালিয়ে যেতে পারেন।
     </div>
 
     <form id="checkout-form">
         {% csrf_token %}
-        <div class="row">
-            <!-- Checkout Form -->
-            <div class="col-lg-8">
-                <!-- Customer Information -->
-                <div class="card checkout-section">
-                    <div class="card-header">
-                        <h5 class="mb-0">Customer Information</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="customer_name" class="form-label">Full Name *</label>
-                                <input type="text" class="form-control" id="customer_name" name="customer_name" 
-                                       value="{{ incomplete_order.customer_name|default:'' }}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="customer_email" class="form-label">Email Address *</label>
-                                <input type="email" class="form-control" id="customer_email" name="customer_email" 
-                                       value="{{ incomplete_order.customer_email|default:'' }}" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="customer_phone" class="form-label">Phone Number *</label>
-                                <input type="tel" class="form-control" id="customer_phone" name="customer_phone" 
-                                       value="{{ incomplete_order.customer_phone|default:'' }}" required
-                                       onblur="saveIncompleteOrder()">
-                                <div class="form-text">We'll save your progress when you enter your phone number.</div>
-                            </div>
-                        </div>
+        <div class="checkout-columns">
+            <!-- LEFT COLUMN - Billing Details -->
+            <div class="left-column">
+                <h3 class="section-title">বিলিং ডিটেইল</h3>
+
+                <!-- Name Input -->
+                <div class="form-group">
+                    <label class="form-label">আপনার নাম লিখুন</label>
+                    <input type="text" class="form-input" id="customer_name" name="customer_name" 
+                           placeholder="সম্পূর্ণ নামটি লিখুন" required
+                           value="{{ incomplete_order.customer_name|default:'' }}">
+                    <span class="input-icon">📋</span>
+                </div>
+
+                <!-- Phone Input -->
+                <div class="form-group">
+                    <label class="form-label">আপনার মোবাইল নাম্বার লিখুন</label>
+                    <input type="tel" class="form-input" id="customer_phone" name="customer_phone" 
+                           placeholder="১১ ডিজিটের মোবাইল নাম্বার লিখুন" required
+                           value="{{ incomplete_order.customer_phone|default:'' }}"
+                           onblur="validateAndSavePhone()">
+                    <span class="input-icon">📋</span>
+                    <div class="form-text">আপনার প্রগেস অটোমেটিক সেভ হবে যখন আপনি বৈধ মোবাইল নম্বর লিখবেন।</div>
+                </div>
+
+                <!-- Area Selection -->
+                <div class="form-group">
+                    <label class="form-label">এলাকা সিলেক্ট করুন</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="delivery_area" value="inside_dhaka" 
+                                   {% if incomplete_order.delivery_area == 'inside_dhaka' or not incomplete_order %}checked{% endif %}>
+                            ঢাকা সিটির ভেতরে
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="delivery_area" value="outside_dhaka"
+                                   {% if incomplete_order.delivery_area == 'outside_dhaka' %}checked{% endif %}>
+                            ঢাকা সিটির বাইরে
+                        </label>
                     </div>
                 </div>
 
-                <!-- Shipping Address -->
-                <div class="card checkout-section">
-                    <div class="card-header">
-                        <h5 class="mb-0">Shipping Address</h5>
+                <!-- Address Textarea -->
+                <div class="form-group">
+                    <label class="form-label">সম্পূর্ণ ঠিকানা</label>
+                    <textarea class="form-input" id="shipping_address" name="shipping_address" 
+                              rows="4" placeholder="হাউজ নাম্বার, রোড, ইউনিট/ফ্লোর, পোস্ট কোড, জেলা" required>{{ incomplete_order.shipping_address|default:'' }}</textarea>
+                </div>
+
+                <!-- Optional Notes -->
+                <div class="form-group">
+                    <label class="form-label">নোট (ঐচ্ছিক)</label>
+                    <textarea class="form-input" id="notes" name="notes" 
+                              rows="3" placeholder="আপনার স্পেশাল কোনো রিকোয়ারমেন্ট থাকলে এখানে লিখুন">{{ incomplete_order.notes|default:'' }}</textarea>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN - Product Details -->
+            <div class="right-column">
+                <h3 class="section-title">প্রোডাক্ট ডিটেইল</h3>
+
+                <!-- Product Items -->
+                <div class="product-items">
+                    {% for item in cart.items.all %}
+                    <div class="product-item">
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-image">
+                        <div class="product-details">
+                            <div class="product-name">{{ item.product.name }}</div>
+                            {% if item.variant %}
+                            <small class="text-muted">{{ item.variant.variant_name }}</small>
+                            {% endif %}
+                            
+                            <!-- Quantity Controls -->
+                            <div class="quantity-controls">
+                                <button type="button" class="quantity-btn" onclick="updateQuantity({{ item.id }}, -1)">-</button>
+                                <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1" 
+                                       onchange="updateQuantityInput({{ item.id }}, this.value)" id="quantity-{{ item.id }}">
+                                <button type="button" class="quantity-btn" onclick="updateQuantity({{ item.id }}, 1)">+</button>
+                            </div>
+                            
+                            <!-- Price -->
+                            <div class="price">
+                                {% if item.product.old_price %}
+                                <span class="old-price">৳{{ item.product.old_price }}</span>
+                                {% endif %}
+                                <span class="current-price">৳{{ item.get_total_price }}</span>
+                            </div>
+                            
+                            <a href="#" class="remove-link" onclick="removeItem({{ item.id }})">Remove</a>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="shipping_address" class="form-label">Street Address *</label>
-                            <textarea class="form-control" id="shipping_address" name="shipping_address" 
-                                      rows="3" required>{{ incomplete_order.shipping_address|default:'' }}</textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="shipping_city" class="form-label">City *</label>
-                                <input type="text" class="form-control" id="shipping_city" name="shipping_city" 
-                                       value="{{ incomplete_order.shipping_city|default:'' }}" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="shipping_state" class="form-label">State *</label>
-                                <input type="text" class="form-control" id="shipping_state" name="shipping_state" 
-                                       value="{{ incomplete_order.shipping_state|default:'' }}" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="shipping_zip_code" class="form-label">ZIP Code *</label>
-                                <input type="text" class="form-control" id="shipping_zip_code" name="shipping_zip_code" 
-                                       value="{{ incomplete_order.shipping_zip_code|default:'' }}" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="shipping_country" class="form-label">Country *</label>
-                            <input type="text" class="form-control" id="shipping_country" name="shipping_country" 
-                                   value="{{ incomplete_order.shipping_country|default:'' }}" required>
-                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Price Breakdown -->
+                <div class="price-section">
+                    <div class="price-row">
+                        <span>সাব-টোটাল (+)</span>
+                        <span>৳<span id="subtotal">{{ cart.get_total_price }}</span></span>
+                    </div>
+                    <div class="price-row">
+                        <span>ডেলিভারি চার্জ (+)</span>
+                        <span>৳<span id="delivery-charge">{{ delivery_charge }}</span></span>
+                    </div>
+                    <div class="price-row total-row">
+                        <span>মোট টোটাল:</span>
+                        <span>৳<span id="total-amount">{{ total_amount }}</span></span>
                     </div>
                 </div>
 
                 <!-- Payment Method -->
-                <div class="card checkout-section">
-                    <div class="card-header">
-                        <h5 class="mb-0">Payment Method</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="payment-methods">
-                            <div class="payment-method" onclick="selectPaymentMethod('credit_card')">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment_method" 
-                                           id="credit_card" value="credit_card" required
-                                           {% if incomplete_order.payment_method == 'credit_card' %}checked{% endif %}>
-                                    <label class="form-check-label" for="credit_card">
-                                        <i class="fas fa-credit-card fa-lg me-2"></i>
-                                        Credit Card
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="payment-method" onclick="selectPaymentMethod('debit_card')">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment_method" 
-                                           id="debit_card" value="debit_card"
-                                           {% if incomplete_order.payment_method == 'debit_card' %}checked{% endif %}>
-                                    <label class="form-check-label" for="debit_card">
-                                        <i class="fas fa-credit-card fa-lg me-2"></i>
-                                        Debit Card
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="payment-method" onclick="selectPaymentMethod('paypal')">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment_method" 
-                                           id="paypal" value="paypal"
-                                           {% if incomplete_order.payment_method == 'paypal' %}checked{% endif %}>
-                                    <label class="form-check-label" for="paypal">
-                                        <i class="fab fa-paypal fa-lg me-2"></i>
-                                        PayPal
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="payment-method" onclick="selectPaymentMethod('cash_on_delivery')">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="payment_method" 
-                                           id="cash_on_delivery" value="cash_on_delivery"
-                                           {% if incomplete_order.payment_method == 'cash_on_delivery' %}checked{% endif %}>
-                                    <label class="form-check-label" for="cash_on_delivery">
-                                        <i class="fas fa-money-bill-wave fa-lg me-2"></i>
-                                        Cash on Delivery
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                <div class="form-group">
+                    <label class="form-label">পেমেন্ট মেথড</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="payment_method" value="cash_on_delivery" checked>
+                            Cash On Delivery
+                        </label>
                     </div>
                 </div>
 
-                <!-- Order Notes -->
-                <div class="card checkout-section">
-                    <div class="card-header">
-                        <h5 class="mb-0">Order Notes (Optional)</h5>
-                    </div>
-                    <div class="card-body">
-                        <textarea class="form-control" id="order_notes" name="order_notes" 
-                                  rows="3" placeholder="Any special instructions for your order...">{{ incomplete_order.notes|default:'' }}</textarea>
+                <!-- Coupon Section -->
+                <div class="coupon-section">
+                    <div class="coupon-input">
+                        <input type="text" placeholder="If you have a coupon code, enter it here..." id="coupon_code">
+                        <button type="button" class="coupon-btn" onclick="applyCoupon()">এপ্লাই</button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Order Summary -->
-            <div class="col-lg-4">
-                <div class="card summary-card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Order Summary</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Order Items -->
-                        <div class="order-items mb-3">
-                            {% for item in cart.items.all %}
-                            <div class="order-summary-item">
-                                <div class="item-info">
-                                    <h6 class="mb-1">{{ item.product.name }}</h6>
-                                    {% if item.variant %}
-                                    <small class="text-muted">{{ item.variant.variant_name }}</small>
-                                    {% endif %}
-                                    <br>
-                                    <small class="text-muted">Qty: {{ item.quantity }}</small>
-                                </div>
-                                <div class="item-price">
-                                    ${{ item.get_total_price }}
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <!-- Order Totals -->
-                        <div class="order-totals">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Subtotal:</span>
-                                <span>${{ cart.get_total_price }}</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Shipping:</span>
-                                <span>$0.00</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Tax:</span>
-                                <span>$0.00</span>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between mb-3">
-                                <strong>Total:</strong>
-                                <strong>${{ cart.get_total_price }}</strong>
-                            </div>
-                        </div>
-
-                        <!-- Terms and Conditions -->
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="terms_agreement" required>
-                            <label class="form-check-label small" for="terms_agreement">
-                                I agree to the <a href="{% url 'terms_conditions' %}" target="_blank">Terms and Conditions</a> 
-                                and <a href="{% url 'privacy_policy' %}" target="_blank">Privacy Policy</a>
-                            </label>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary btn-lg w-100" id="place-order-btn">
-                            <i class="fas fa-lock"></i> Place Order
-                        </button>
-
-                        <div class="text-center mt-3">
-                            <small class="text-muted">
-                                <i class="fas fa-shield-alt"></i> Your payment information is secure
-                            </small>
-                        </div>
-                    </div>
-                </div>
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="place-order-btn">
+                    অর্ডার টি কনফার্ম করুন ৳<span id="final-total">{{ total_amount }}</span>
+                </button>
             </div>
         </div>
     </form>
@@ -303,43 +366,38 @@
 </div>
 
 <script>
-let selectedPaymentMethod = null;
-let saveIncompleteTimeout = null;
-
-// Initialize payment method selection
-document.addEventListener('DOMContentLoaded', function() {
-    // Set initial selected payment method
-    const selectedRadio = document.querySelector('input[name="payment_method"]:checked');
-    if (selectedRadio) {
-        selectedPaymentMethod = selectedRadio.value;
-        selectedRadio.closest('.payment-method').classList.add('selected');
-    }
+// Phone validation and auto-save
+function validateBangladeshiPhone(phone) {
+    // Remove non-digit characters
+    phone = phone.replace(/\D/g, '');
     
-    // Auto-save when leaving the page
-    window.addEventListener('beforeunload', function() {
-        saveIncompleteOrder(true); // Force save
-    });
-});
-
-function selectPaymentMethod(method) {
-    selectedPaymentMethod = method;
-    document.getElementById(method).checked = true;
+    // Check if it's 11 digits and starts with valid prefix
+    if (phone.length !== 11) return false;
     
-    // Update UI
-    document.querySelectorAll('.payment-method').forEach(element => {
-        element.classList.remove('selected');
-    });
-    document.getElementById(method).closest('.payment-method').classList.add('selected');
-    
-    // Auto-save progress
-    saveIncompleteOrder();
+    const validPrefixes = ['013', '014', '015', '016', '017', '018', '019'];
+    return validPrefixes.some(prefix => phone.startsWith(prefix));
 }
 
-function saveIncompleteOrder(force = false) {
+function validateAndSavePhone() {
+    const phoneInput = document.getElementById('customer_phone');
+    const phone = phoneInput.value.trim();
+    
+    if (validateBangladeshiPhone(phone)) {
+        saveIncompleteOrder();
+    } else if (phone.length > 0) {
+        showToast('দয়া করে একটি বৈধ ১১-সংখ্যার বাংলাদেশি মোবাইল নম্বর লিখুন (013, 014, 015, 016, 017, 018, 019 দিয়ে শুরু)', 'error');
+        phoneInput.focus();
+    }
+}
+
+// Auto-save functionality
+let saveIncompleteTimeout = null;
+
+function saveIncompleteOrder() {
     const phoneNumber = document.getElementById('customer_phone').value.trim();
     
-    if (!phoneNumber) {
-        return; // Don't save without phone number
+    if (!validateBangladeshiPhone(phoneNumber)) {
+        return;
     }
     
     // Clear previous timeout
@@ -347,31 +405,21 @@ function saveIncompleteOrder(force = false) {
         clearTimeout(saveIncompleteTimeout);
     }
     
-    // Debounce saving to avoid too many requests
-    if (!force) {
-        saveIncompleteTimeout = setTimeout(() => {
-            performIncompleteOrderSave();
-        }, 1000);
-    } else {
+    // Debounce saving
+    saveIncompleteTimeout = setTimeout(() => {
         performIncompleteOrderSave();
-    }
+    }, 1000);
 }
 
 function performIncompleteOrderSave() {
     const formData = {
         'customer_phone': document.getElementById('customer_phone').value,
-        'customer_email': document.getElementById('customer_email').value,
         'customer_name': document.getElementById('customer_name').value,
         'shipping_address': document.getElementById('shipping_address').value,
-        'shipping_city': document.getElementById('shipping_city').value,
-        'shipping_state': document.getElementById('shipping_state').value,
-        'shipping_zip_code': document.getElementById('shipping_zip_code').value,
-        'shipping_country': document.getElementById('shipping_country').value,
-        'payment_method': selectedPaymentMethod,
-        'notes': document.getElementById('order_notes').value
+        'delivery_area': document.querySelector('input[name="delivery_area"]:checked').value,
+        'notes': document.getElementById('notes').value
     };
     
-    // Get CSRF token
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     
     fetch('{% url "orders:save_incomplete_order" %}', {
@@ -386,18 +434,167 @@ function performIncompleteOrderSave() {
     .then(data => {
         if (data.success) {
             showProgressSaved();
+        } else {
+            showToast(data.message, 'error');
         }
     })
     .catch(error => {
         console.error('Error saving progress:', error);
+        showToast('প্রগেস সেভ করতে সমস্যা হয়েছে', 'error');
     });
 }
 
+// Cart management functions
+function updateQuantity(itemId, change) {
+    const quantityInput = document.getElementById('quantity-' + itemId);
+    let newQuantity = parseInt(quantityInput.value) + change;
+    
+    if (newQuantity < 1) newQuantity = 1;
+    
+    updateCartItem(itemId, newQuantity);
+}
+
+function updateQuantityInput(itemId, quantity) {
+    if (quantity < 1) quantity = 1;
+    updateCartItem(itemId, parseInt(quantity));
+}
+
+function updateCartItem(itemId, quantity) {
+    showLoading(true);
+    
+    fetch('{% url "cart:update_cart_item" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            'item_id': itemId,
+            'quantity': quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload(); // Reload to update prices
+        } else {
+            showToast('কোয়ান্টিটি আপডেট করতে সমস্যা হয়েছে', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('কোয়ান্টিটি আপডেট করতে সমস্যা হয়েছে', 'error');
+    })
+    .finally(() => {
+        showLoading(false);
+    });
+}
+
+function removeItem(itemId) {
+    if (!confirm('আপনি কি এই আইটেমটি রিমুভ করতে চান?')) return;
+    
+    showLoading(true);
+    
+    fetch('{% url "cart:remove_from_cart" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            'item_id': itemId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            showToast('আইটেম রিমুভ করতে সমস্যা হয়েছে', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('আইটেম রিমুভ করতে সমস্যা হয়েছে', 'error');
+    })
+    .finally(() => {
+        showLoading(false);
+    });
+}
+
+// Form submission
+document.getElementById('checkout-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const phoneNumber = document.getElementById('customer_phone').value.trim();
+    if (!validateBangladeshiPhone(phoneNumber)) {
+        showToast('দয়া করে একটি বৈধ ১১-সংখ্যার বাংলাদেশি মোবাইল নম্বর লিখুন', 'error');
+        document.getElementById('customer_phone').focus();
+        return;
+    }
+    
+    const requiredFields = [
+        'customer_name', 'customer_phone', 'shipping_address'
+    ];
+    
+    for (const fieldName of requiredFields) {
+        const field = document.getElementById(fieldName);
+        if (!field.value.trim()) {
+            showToast('দয়া করে সকল প্রয়োজনীয় তথ্য প্রদান করুন', 'error');
+            field.focus();
+            return;
+        }
+    }
+    
+    const formData = {
+        'customer_name': document.getElementById('customer_name').value,
+        'customer_phone': document.getElementById('customer_phone').value,
+        'shipping_address': document.getElementById('shipping_address').value,
+        'delivery_area': document.querySelector('input[name="delivery_area"]:checked').value,
+        'notes': document.getElementById('notes').value,
+        'payment_method': 'cash_on_delivery'
+    };
+    
+    // Disable submit button and show loading
+    const submitBtn = document.getElementById('place-order-btn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> প্রসেস হচ্ছে...';
+    showLoading(true);
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    fetch('{% url "orders:create_order" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect_url;
+        } else {
+            showToast(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('অর্ডার তৈরি করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `অর্ডার টি কনফার্ম করুন ৳<span id="final-total">{{ total_amount }}</span>`;
+        showLoading(false);
+    });
+});
+
+// Utility functions
 function showProgressSaved() {
     const progressElement = document.getElementById('progress-saved');
     progressElement.style.display = 'block';
     
-    // Hide after 5 seconds
     setTimeout(() => {
         progressElement.style.display = 'none';
     }, 5000);
@@ -409,117 +606,47 @@ function showLoading(show) {
 }
 
 function showToast(message, type) {
-    const bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+    // Simple toast implementation
     const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white ${bgClass} border-0 position-fixed top-0 end-0 m-3`;
-    toast.style.zIndex = '10000';
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${message}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#28a745' : '#dc3545'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        max-width: 400px;
     `;
+    toast.textContent = message;
     
     document.body.appendChild(toast);
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
     
-    toast.addEventListener('hidden.bs.toast', function() {
+    setTimeout(() => {
         toast.remove();
-    });
+    }, 5000);
 }
-
-// Form submission
-document.getElementById('checkout-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    if (!selectedPaymentMethod) {
-        showToast('Please select a payment method', 'error');
-        return;
-    }
-    
-    if (!document.getElementById('terms_agreement').checked) {
-        showToast('Please agree to the terms and conditions', 'error');
-        return;
-    }
-    
-    // Validate required fields
-    const requiredFields = [
-        'customer_name', 'customer_email', 'customer_phone',
-        'shipping_address', 'shipping_city', 'shipping_state',
-        'shipping_zip_code', 'shipping_country'
-    ];
-    
-    for (const fieldName of requiredFields) {
-        const field = document.getElementById(fieldName);
-        if (!field.value.trim()) {
-            showToast(`${fieldName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} is required`, 'error');
-            field.focus();
-            return;
-        }
-    }
-    
-    const formData = {
-        'customer_name': document.getElementById('customer_name').value,
-        'customer_email': document.getElementById('customer_email').value,
-        'customer_phone': document.getElementById('customer_phone').value,
-        'shipping_address': document.getElementById('shipping_address').value,
-        'shipping_city': document.getElementById('shipping_city').value,
-        'shipping_state': document.getElementById('shipping_state').value,
-        'shipping_zip_code': document.getElementById('shipping_zip_code').value,
-        'shipping_country': document.getElementById('shipping_country').value,
-        'payment_method': selectedPaymentMethod,
-        'notes': document.getElementById('order_notes').value
-    };
-    
-    // Disable submit button and show loading
-    const submitBtn = document.getElementById('place-order-btn');
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-    showLoading(true);
-    
-    // Get CSRF token
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    
-    // Make AJAX request
-    fetch('{% url "orders:create_order" %}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            window.location.href = data.redirect_url;
-        } else {
-            showToast(data.message || 'Error creating order', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('Error creating order. Please try again.', 'error');
-    })
-    .finally(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-lock"></i> Place Order';
-        showLoading(false);
-    });
-});
 
 // Auto-save on field changes
 document.querySelectorAll('#checkout-form input, #checkout-form textarea').forEach(field => {
-    field.addEventListener('blur', function() {
-        if (this.id !== 'customer_phone') { // Phone is handled separately
-            saveIncompleteOrder();
-        }
+    if (field.id !== 'customer_phone') {
+        field.addEventListener('blur', saveIncompleteOrder);
+    }
+});
+
+// Update delivery charge when area changes
+document.querySelectorAll('input[name="delivery_area"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const deliveryCharge = this.value === 'inside_dhaka' ? 70 : 120;
+        document.getElementById('delivery-charge').textContent = deliveryCharge;
+        
+        const subtotal = parseFloat(document.getElementById('subtotal').textContent);
+        const total = subtotal + deliveryCharge;
+        document.getElementById('total-amount').textContent = total;
+        document.getElementById('final-total').textContent = total;
+        
+        saveIncompleteOrder();
     });
 });
 </script>

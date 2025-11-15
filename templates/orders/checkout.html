@@ -289,34 +289,39 @@
 
                 <!-- Product Items -->
                 <div class="product-items">
-                    {% for item in cart.items.all %}
-                    <div class="product-item">
-                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-image">
-                        <div class="product-details">
-                            <div class="product-name">{{ item.product.name }}</div>
-                            {% if item.variant %}
-                            <small class="text-muted">{{ item.variant.variant_name }}</small>
-                            {% endif %}
-                            
-                            <!-- Quantity Controls -->
-                            <div class="quantity-controls">
-                                <button type="button" class="quantity-btn" onclick="updateQuantity({{ item.id }}, -1)">-</button>
-                                <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1" 
-                                       onchange="updateQuantityInput({{ item.id }}, this.value)" id="quantity-{{ item.id }}">
-                                <button type="button" class="quantity-btn" onclick="updateQuantity({{ item.id }}, 1)">+</button>
+                    {% for ci in cart_items %}
+                        {% with item=ci.item %}
+                            <div class="product-item">
+                                <img src="{{ ci.image_url }}" class="product-image"
+                                    alt="{{ item.product.name }}">
+
+                                <div class="product-details">
+                                    <div class="product-name">{{ item.product.name }}</div>
+
+                                    {% if item.variant %}
+                                    <small class="text-muted">{{ item.variant.variant_name }}</small>
+                                    {% endif %}
+                                    
+                                    <!-- Quantity Controls -->
+                                    <div class="quantity-controls">
+                                        <button type="button" class="quantity-btn" onclick="updateQuantity({{ item.id }}, -1)">-</button>
+                                        <input type="number" class="quantity-input" value="{{ item.quantity }}" min="1" 
+                                            onchange="updateQuantityInput({{ item.id }}, this.value)" id="quantity-{{ item.id }}">
+                                        <button type="button" class="quantity-btn" onclick="updateQuantity({{ item.id }}, 1)">+</button>
+                                    </div>
+                                    
+                                    <!-- Price -->
+                                    <div class="price">
+                                        {% if item.product.old_price %}
+                                        <span class="old-price">৳{{ item.product.old_price }}</span>
+                                        {% endif %}
+                                        <span class="current-price">৳{{ item.get_total_price }}</span>
+                                    </div>
+                                    
+                                    <a href="#" class="remove-link" onclick="removeItem({{ item.id }})">Remove</a>
+                                </div>
                             </div>
-                            
-                            <!-- Price -->
-                            <div class="price">
-                                {% if item.product.old_price %}
-                                <span class="old-price">৳{{ item.product.old_price }}</span>
-                                {% endif %}
-                                <span class="current-price">৳{{ item.get_total_price }}</span>
-                            </div>
-                            
-                            <a href="#" class="remove-link" onclick="removeItem({{ item.id }})">Remove</a>
-                        </div>
-                    </div>
+                        {% endwith %}
                     {% endfor %}
                 </div>
 

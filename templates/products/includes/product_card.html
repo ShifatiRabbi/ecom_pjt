@@ -44,9 +44,10 @@
                 <i class="fas fa-eye"></i> View Details
             </a>
             {% if product.is_in_stock %}
-            <button class="btn btn-primary btn-sm w-100 add-to-cart" data-product-id="{{ product.id }}">
+            <button class="btn btn-primary btn-sm w-100 add-to-cart" onclick="addToCart({{ product.id }})">
                 <i class="fas fa-shopping-cart"></i> Add to Cart
             </button>
+
             {% else %}
             <button class="btn btn-secondary btn-sm w-100" disabled>Out of Stock</button>
             {% endif %}
@@ -55,48 +56,43 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    $('.add-to-cart').click(function() {
-        const productId = $(this).data('product-id');
-        const button = $(this);
-        
-        $.ajax({
-            url: '{% url "cart:add_to_cart" %}',
-            type: 'POST',
-            data: JSON.stringify({
-                'product_id': productId,
-                'quantity': 1
-            }),
-            contentType: 'application/json',
-            success: function(response) {
-                if (response.success) {
-                    $('#cart-count').text(response.cart_total_quantity);
-                    
-                    // Show success message
-                    const toast = $(`
-                        <div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 end-0 m-3" role="alert">
-                            <div class="d-flex">
-                                <div class="toast-body">
-                                    Product added to cart successfully!
-                                </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+function addToCart(productId){
+    $.ajax({
+        url: '{% url "cart:add_to_cart" %}',
+        type: 'POST',
+        data: JSON.stringify({
+            'product_id': productId,
+            'quantity': 1
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+            if (response.success) {
+                $('#cart-count').text(response.cart_total_quantity);
+                
+                // Show success message
+                const toast = $(`
+                    <div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 end-0 m-3" role="alert">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                Product added to cart successfully!
                             </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                         </div>
-                    `);
-                    $('body').append(toast);
-                    const bsToast = new bootstrap.Toast(toast);
-                    bsToast.show();
-                    
-                    // Remove toast after hide
-                    toast.on('hidden.bs.toast', function() {
-                        $(this).remove();
-                    });
-                }
-            },
-            error: function(xhr) {
-                alert('Error adding product to cart');
+                    </div>
+                `);
+                $('body').append(toast);
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                // Remove toast after hide
+                toast.on('hidden.bs.toast', function() {
+                    $(this).remove();
+                });
             }
-        });
+        },
+        error: function(xhr) {
+            alert('Error adding product to cart');
+        }
     });
-});
+}
 </script>

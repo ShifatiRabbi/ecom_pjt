@@ -221,22 +221,41 @@ logger = logging.getLogger(__name__)
 def checkout(request):
     """Checkout page view"""
     cart = get_or_create_cart(request)
+
     if cart.get_total_quantity() == 0:
         return redirect('cart:cart_detail')
-    
-    # Check if there's an incomplete order for this session
+
+    # Add image_url to each cart item
+    cart_items = []
+    for item in cart.items.all():
+        primary_img = item.product.images.filter(is_primary=True).first()
+        if not primary_img:
+            primary_img = item.product.images.first()
+
+        image_url = ''
+        if primary_img:
+            try:
+                image_url = primary_img.image.url
+            except:
+                image_url = ''
+
+        cart_items.append({
+            "item": item,
+            "image_url": image_url
+        })
+
+    # Find incomplete order
     incomplete_order = None
     if request.session.session_key:
-        try:
-            incomplete_order = IncompleteOrder.objects.get(session_key=request.session.session_key)
-        except IncompleteOrder.DoesNotExist:
-            pass
-    
-    # Calculate delivery charge
-    delivery_charge = 70  # Default for inside Dhaka
-    
+        incomplete_order = IncompleteOrder.objects.filter(
+            session_key=request.session.session_key
+        ).first()
+
+    delivery_charge = 70
+
     return render(request, 'orders/checkout.html', {
         'cart': cart,
+        'cart_items': cart_items,   # <--- important
         'incomplete_order': incomplete_order,
         'delivery_charge': delivery_charge,
         'total_amount': cart.get_total_price() + delivery_charge

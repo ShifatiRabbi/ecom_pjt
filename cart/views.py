@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from .models import Cart, CartItem
@@ -26,6 +27,7 @@ def add_to_cart(request):
         product_id = data.get('product_id')
         variant_id = data.get('variant_id')
         quantity = int(data.get('quantity', 1))
+        buy_now = data.get('buy_now', False)
         
         product = get_object_or_404(Product, id=product_id, is_active=True)
         cart = get_or_create_cart(request)
@@ -46,11 +48,24 @@ def add_to_cart(request):
             cart_item.quantity += quantity
             cart_item.save()
         
-        return JsonResponse({
-            'success': True,
-            'message': 'Product added to cart',
-            'cart_total_quantity': cart.get_total_quantity()
-        })
+        if buy_now:
+            return JsonResponse({
+                'success': True,
+                'redirect_url': reverse('orders:checkout'),
+                'cart_total_quantity': cart.get_total_quantity()
+            })
+        else:
+            return JsonResponse({
+                'success': True,
+                'message': 'Product added to cart',
+                'cart_total_quantity': cart.get_total_quantity()
+            })
+        
+        # return JsonResponse({
+        #     'success': True,
+        #     'message': 'Product added to cart',
+        #     'cart_total_quantity': cart.get_total_quantity()
+        # })
         
     except Exception as e:
         return JsonResponse({

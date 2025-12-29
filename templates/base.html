@@ -2,70 +2,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        document.addEventListener('keydown', function(e) {
+            // Block Ctrl+U
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                window.location.href = "/fake-source/";
+            }
+        });
+    </script>
+    <script>
+    // Disable Right Click
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // Disable Ctrl+Shift+I (dev tools), Ctrl+U, F12
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) return false; // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+    }
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}E-Commerce Store{% endblock %}</title>
+    <title>{% block title %}ShopNow - Best Online Shopping{% endblock %}</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_css %}{% endblock %}
+    
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --secondary-color: #28a745;
+            --accent-color: #ff6b35;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, var(--dark-color), #34495e);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .brand-logo span {
+            color: var(--accent-color);
+        }
+        
+        .nav-link {
+            color: #ecf0f1 !important;
+            font-weight: 500;
+            padding: 8px 16px !important;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+        
+        .category-dropdown .dropdown-menu {
+            background: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-width: 250px;
+        }
+        
+        .category-dropdown .dropdown-item {
+            padding: 10px 20px;
+            border-bottom: 1px solid #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .category-dropdown .dropdown-item:hover {
+            background: var(--light-color);
+            color: var(--primary-color);
+            padding-left: 25px;
+        }
+        
+        .search-form {
+            position: relative;
+            min-width: 300px;
+        }
+        
+        .search-input {
+            border-radius: 25px;
+            border: 2px solid transparent;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input::placeholder {
+            color: #bdc3c7;
+        }
+        
+        .search-input:focus {
+            background: white;
+            color: var(--dark-color);
+            border-color: var(--accent-color);
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            color: white;
+        }
+        
+        .cart-btn {
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: white;
+            border-radius: 25px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .cart-count {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        /* Footer Styles */
+        .main-footer {
+            background: var(--dark-color);
+            color: #ecf0f1;
+            margin-top: 50px;
+        }
+        
+        .footer-section {
+            padding: 50px 0 20px;
+        }
+        
+        .footer-links h5 {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links ul li a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+        
+        .copyright {
+            background: rgba(0,0,0,0.2);
+            padding: 20px 0;
+            text-align: center;
+            color: #95a5a6;
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-form {
+                min-width: 100%;
+                margin: 10px 0;
+            }
+            
+            .category-dropdown .dropdown-menu {
+                min-width: 200px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'products:home' %}">ShopNow</a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'products:home' %}">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            Categories
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% for category in categories %}
-                            <li>
-                                <a class="dropdown-item" href="{{ category.get_absolute_url }}">
-                                    {{ category.name }}
-                                </a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/contact">Contact</a>
-                    </li>
-                </ul>
+    <!-- Header -->
+    <header class="main-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <!-- Brand Logo -->
+                <a class="brand-logo" href="{% url 'products:home' %}">
+                    Shop<span>Now</span>
+                </a>
                 
-                <div class="d-flex">
-                    <!-- Search Form -->
-                    <form class="d-flex me-2" action="{% url 'products:product_search' %}" method="get">
-                        <input class="form-control me-2" type="search" name="q" placeholder="Search products...">
-                        <button class="btn btn-outline-light" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                    <span class="navbar-toggler-icon" style="color: white;">☰</span>
+                </button>
+                
+                <!-- Navigation -->
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'products:home' %}">
+                                <i class="fas fa-home me-1"></i> Home
+                            </a>
+                        </li>
+                        
+                        <!-- Categories Dropdown -->
+                        <li class="nav-item dropdown category-dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-th-large me-1"></i> Categories
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% for category in categories %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ category.get_absolute_url }}">
+                                        <i class="fas fa-arrow-right me-2"></i> {{ category.name }}
+                                    </a>
+                                </li>
+                                {% if forloop.counter == 6 %}
+                                <li><hr class="dropdown-divider"></li>
+                                {% endif %}
+                                {% endfor %}
+                                {% comment %} <li>
+                                    <a class="dropdown-item text-primary" href="{% url 'products:category_list' %}">
+                                        <i class="fas fa-eye me-2"></i> View All Categories
+                                    </a>
+                                </li> {% endcomment %}
+                            </ul>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="#featured">
+                                <i class="fas fa-star me-1"></i> Featured
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/deals">
+                                <i class="fas fa-tag me-1"></i> Hot Deals
+                            </a>
+                        </li>
+                    </ul>
                     
-                    <!-- Cart -->
-                    <a href="{% url 'cart:cart_detail' %}" class="btn btn-outline-light position-relative me-2">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cart-count">{{ cart_total_quantity }}</span>
-                    </a>
+                    <!-- Right Section -->
+                    <div class="d-flex align-items-center">
+                        <!-- Search Form -->
+                        <form class="search-form me-3" action="{% url 'products:product_search' %}" method="get">
+                            <input class="form-control search-input" type="search" name="q" placeholder="Search products...">
+                            <button class="btn search-btn" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                        
+                        <!-- Cart -->
+                        <a href="{% url 'cart:cart_detail' %}" class="btn cart-btn position-relative">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cart-count">{{ cart_total_quantity|default:0 }}</span>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <!-- Main Content -->
     <main>
@@ -73,38 +313,88 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light mt-5">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>ShopNow</h5>
-                    <p>Your one-stop destination for all your shopping needs.</p>
-                </div>
-                <div class="col-md-2">
-                    <h6>Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'products:home' %}" class="text-light">Home</a></li>
-                        <li><a href="#" class="text-light">About Us</a></li>
-                        <li><a href="/contact" class="text-light">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6>Policies</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="/privacy-policy" class="text-light">Privacy Policy</a></li>
-                        <li><a href="/refund-policy" class="text-light">Refund Policy</a></li>
-                        <li><a href="/terms-conditions" class="text-light">Terms & Conditions</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6>Contact Info</h6>
-                    <p class="mb-1"><i class="fas fa-phone"></i> +1 234 567 8900</p>
-                    <p class="mb-1"><i class="fas fa-envelope"></i> info@shopnow.com</p>
+    <footer class="main-footer">
+        <div class="footer-section">
+            <div class="container">
+                <div class="row">
+                    <!-- Customer Service -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-links">
+                            <h5>Customer Service</h5>
+                            <ul>
+                                <li><a href="/signin">Sign in</a></li>
+                                <li><a href="/register">Create New Account</a></li>
+                                <li><a href="{% url 'cart:cart_detail' %}">My Shopping Cart</a></li>
+                                <li><a href="/wishlist">My Wishlist</a></li>
+                                <li><a href="/orders">My Orders</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Policies -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-links">
+                            <h5>Policies</h5>
+                            <ul>
+                                <li><a href="#">Medical Page</a></li>
+                                <li><a href="/terms-conditions">Terms & Conditions</a></li>
+                                <li><a href="/refund-policy">Refund & Return Policy</a></li>
+                                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                                <li><a href="#">Shipping Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-links">
+                            <h5>Contact Info</h5>
+                            <ul>
+                                <li><a href="tel:01338600593"><i class="fas fa-phone me-2"></i> 01338600593</a></li>
+                                <li><a href="mailto:info@shopnow.com"><i class="fas fa-envelope me-2"></i> info@shopnow.com</a></li>
+                                <li><a href="#"><i class="fas fa-map-marker-alt me-2"></i> Dhaka, Bangladesh</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Social & Payment -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-links">
+                            <h5>Connect With Us</h5>
+                            <div class="social-links mb-3">
+                                <a href="#" class="btn btn-outline-light btn-sm me-2 mb-2">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-light btn-sm me-2 mb-2">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-light btn-sm me-2 mb-2">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-light btn-sm me-2 mb-2">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                            <h6>We Accept</h6>
+                            <div class="payment-methods" style="color: #FFFFFF">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077976.png" width="40" alt="Cash on Delivery" class="me-2 mb-2"> Cash on delivery
+                                {% comment %} <img src="https://seeklogo.com/images/B/bkash-logo-9D3D54A8C8-seeklogo.com.png" width="40" alt="bKash" class="me-2 mb-2">
+                                <img src="https://seeklogo.com/images/N/nagad-logo-270FAD347D-seeklogo.com.png" width="40" alt="Nagad" class="me-2 mb-2">
+                                <img src="https://seeklogo.com/images/D/dutch-bangla-bank-rocket-logo-4A6CB417C6-seeklogo.com.png" width="40" alt="Rocket" class="me-2 mb-2"> {% endcomment %}
+
+                                {% comment %} <img src="https://via.placeholder.com/40x25/fff/fff?text=VISA" alt="Visa" class="me-2 mb-2">
+                                <img src="https://via.placeholder.com/40x25/fff/fff?text=MC" alt="MasterCard" class="me-2 mb-2"> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <div class="text-center">
-                <p>&copy; 2024 ShopNow. All rights reserved.</p>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="copyright">
+            <div class="container">
+                <p class="mb-0">Copyright © 2024 ShopNow. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -116,31 +406,6 @@
     
     <!-- Custom JS -->
     <script>
-        // CSRF token setup for AJAX
-        {% comment %} function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        
-        const csrftoken = getCookie('csrftoken');
-        
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        }); {% endcomment %}
         // CSRF token setup for AJAX
         function getCookie(name) {
             let cookieValue = null;
@@ -157,7 +422,6 @@
             return cookieValue;
         }
 
-        // Set up AJAX CSRF token
         const csrftoken = getCookie('csrftoken');
 
         // For fetch API
@@ -165,7 +429,7 @@
             return csrftoken;
         }
 
-        // For jQuery AJAX (if you're using it elsewhere)
+        // For jQuery AJAX
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
                 if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {

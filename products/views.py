@@ -3,14 +3,35 @@ from django.db.models import Q
 from .models import Product, Category
 
 def home(request):
-    featured_products = Product.objects.filter(is_featured=True, is_active=True)[:8]
-    latest_products = Product.objects.filter(is_active=True).order_by('-created_at')[:12]
+    # Get categories for navigation
     categories = Category.objects.filter(is_active=True)
     
+    # Get products by category (you'll need to adjust these based on your category structure)
+    home_gadgets_products = Product.objects.filter(
+        category__name__icontains='home', 
+        is_active=True
+    )[:8] or Product.objects.filter(is_active=True)[:8]
+    
+    health_beauty_products = Product.objects.filter(
+        category__name__icontains='health', 
+        is_active=True
+    )[:8] or Product.objects.filter(is_active=True)[:8]
+    
+    featured_products = Product.objects.filter(
+        is_featured=True, 
+        is_active=True
+    )[:12] or Product.objects.filter(is_active=True)[:12]
+    
+    latest_products = Product.objects.filter(
+        is_active=True
+    ).order_by('-created_at')[:12]
+    
     context = {
+        'categories': categories,
+        'home_gadgets_products': home_gadgets_products,
+        'health_beauty_products': health_beauty_products,
         'featured_products': featured_products,
         'latest_products': latest_products,
-        'categories': categories,
     }
     return render(request, 'products/home.html', context)
 

@@ -4,9 +4,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .admin_site import custom_admin_site
 from django.views.generic import TemplateView
+from django.http import HttpResponse
+def fake_source(request):
+    return HttpResponse("<h2>Tophutbd is protected.</h2>")
 
 urlpatterns = [
     path('', include('products.urls')),
+    path("fake-source/", fake_source),
     path('cart/', include('cart.urls')),
     path('orders/', include('orders.urls')),
     path('users/', include('users.urls')),

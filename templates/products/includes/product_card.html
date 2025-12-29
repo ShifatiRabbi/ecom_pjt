@@ -1,98 +1,167 @@
-<div class="card product-card h-100">
-    {% with product.images.all|first as primary_image %}
-    {% if primary_image %}
-    <img src="{{ primary_image.image.url }}" class="card-img-top" alt="{{ primary_image.alt_text|default:product.name }}" style="height: 200px; object-fit: cover;">
-    {% else %}
-    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="{{ product.name }}">
-    {% endif %}
-    {% endwith %}
-    
-    {% if product.get_discount_percentage %}
-    <span class="badge bg-danger discount-badge">{{ product.get_discount_percentage }}% OFF</span>
-    {% endif %}
-    
-    <div class="card-body d-flex flex-column">
-        <h5 class="card-title">{{ product.name }}</h5>
-        <p class="card-text text-muted small">{{ product.description|striptags|truncatewords:10 }}</p>
-        
-        <div class="price-section mt-auto">
-            {% if product.compare_price and product.compare_price > product.price %}
-            <div class="d-flex align-items-center">
-                <span class="h5 mb-0 text-primary">${{ product.price }}</span>
-                <small class="text-muted text-decoration-line-through ms-2">${{ product.compare_price }}</small>
-            </div>
-            {% else %}
-            <span class="h5 mb-0 text-primary">${{ product.price }}</span>
-            {% endif %}
-        </div>
-        
-        <div class="stock-info mb-2">
-            {% if product.is_in_stock %}
-            <small class="text-success">
-                <i class="fas fa-check-circle"></i> In Stock
-                {% if product.is_low_stock %}
-                <span class="text-warning">(Low Stock)</span>
-                {% endif %}
-            </small>
-            {% else %}
-            <small class="text-danger"><i class="fas fa-times-circle"></i> Out of Stock</small>
-            {% endif %}
-        </div>
-        
-        <div class="action-buttons">
-            <a href="{{ product.get_absolute_url }}" class="btn btn-outline-primary btn-sm w-100 mb-2">
-                <i class="fas fa-eye"></i> View Details
-            </a>
-            {% if product.is_in_stock %}
-            <button class="btn btn-primary btn-sm w-100 add-to-cart" onclick="addToCart({{ product.id }})">
-                <i class="fas fa-shopping-cart"></i> Add to Cart
-            </button>
+<a href="{{ product.get_absolute_url }}"
+   class="text-decoration-none text-dark d-block h-100">
 
-            {% else %}
-            <button class="btn btn-secondary btn-sm w-100" disabled>Out of Stock</button>
+    <div class="card product-card h-100"
+        style="
+            border: none;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        ">
+
+        {% with product.images.all|first as primary_image %}
+        <div class="position-relative"
+            style="
+                height: 250px;
+                background-color: #ffffff;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                {% if primary_image %}
+                    background-image: url('{{ primary_image.image.url }}');
+                {% else %}
+                    background-image: url('https://via.placeholder.com/400x280/f8f9fa/6c757d?text=No+Image');
+                {% endif %}
+            ">
+
+            <!-- Discount Badge -->
+            {% if product.get_discount_percentage %}
+            <span class="position-absolute top-0 start-0 badge bg-danger m-2"
+                style="font-size: 12px; padding: 6px 10px;">
+                {{ product.get_discount_percentage }}% OFF
+            </span>
             {% endif %}
+
+            <!-- Stock Badge -->
+            <span class="position-absolute top-0 end-0 badge
+                {% if product.is_in_stock %}bg-success{% else %}bg-secondary{% endif %}
+                m-2"
+                style="font-size: 10px; padding: 4px 8px;">
+                {% if product.is_in_stock %}
+                <i class="fas fa-check-circle me-1"></i> IN STOCK
+                {% else %}
+                <i class="fas fa-times-circle me-1"></i> OUT OF STOCK
+                {% endif %}
+            </span>
+
+        </div>
+        {% endwith %}
+
+        <div class="card-body d-flex flex-column p-3">
+
+            <!-- Product Name -->
+            <h6 class="card-title mb-2"
+                style="
+                    font-weight: 600;
+                    color: #2c3e50;
+                    line-height: 1.3;
+                    height: 42px;
+                    overflow: hidden;
+                ">
+                {{ product.name }}
+            </h6>
+
+            <!-- Sales Count -->
+            <small class="text-muted mb-2">
+                <i class="fas fa-chart-line me-1"></i>
+                +{{ product.sales_count|default:360 }} sold
+            </small>
+
+            <!-- Price -->
+            <div class="mt-auto mb-2">
+                {% if product.compare_price and product.compare_price > product.price %}
+                <div class="d-flex align-items-center">
+                    <span class="h5 mb-0 text-success fw-bold">৳{{ product.price }}</span>
+                    <small class="text-muted text-decoration-line-through ms-2">
+                        ৳{{ product.compare_price }}
+                    </small>
+                </div>
+                {% else %}
+                <span class="h5 mb-0 text-success fw-bold">৳{{ product.price }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Add To Cart Button -->
+            {% if product.is_in_stock %}
+            <button class="btn btn-danger btn-sm w-100 add-to-cart"
+                    onclick="event.preventDefault(); event.stopPropagation(); addToCart({{ product.id }}, this);">
+                <i class="fas fa-shopping-cart me-1"></i> Add To Cart
+            </button>
+            {% else %}
+            <button class="btn btn-secondary btn-sm w-100" disabled>
+                <i class="fas fa-times-circle me-1"></i> Out of Stock
+            </button>
+            {% endif %}
+
         </div>
     </div>
-</div>
+</a>
+
 
 <script>
-function addToCart(productId){
-    $.ajax({
-        url: '{% url "cart:add_to_cart" %}',
-        type: 'POST',
-        data: JSON.stringify({
-            'product_id': productId,
-            'quantity': 1
-        }),
-        contentType: 'application/json',
-        success: function(response) {
-            if (response.success) {
-                $('#cart-count').text(response.cart_total_quantity);
-                
-                // Show success message
-                const toast = $(`
-                    <div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 end-0 m-3" role="alert">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                Product added to cart successfully!
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                        </div>
-                    </div>
-                `);
-                $('body').append(toast);
-                const bsToast = new bootstrap.Toast(toast);
-                bsToast.show();
-                
-                // Remove toast after hide
-                toast.on('hidden.bs.toast', function() {
-                    $(this).remove();
-                });
-            }
+function addToCart(productId, button) {
+    const originalHTML = button.innerHTML;
+
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    button.disabled = true;
+
+    fetch('{% url "cart:add_to_cart" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
         },
-        error: function(xhr) {
-            alert('Error adding product to cart');
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: 1
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) cartCount.textContent = data.cart_total_quantity;
+
+            showToast('Product added to cart successfully!', 'success');
+        } else {
+            showToast('Failed to add product!', 'error');
         }
+    })
+    .catch(() => {
+        showToast('Something went wrong!', 'error');
+    })
+    .finally(() => {
+        button.innerHTML = originalHTML;
+        button.disabled = false;
     });
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#28a745' : '#dc3545'};
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-weight: 500;
+    `;
+
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle me-2"></i>
+        ${message}
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
 }
 </script>
